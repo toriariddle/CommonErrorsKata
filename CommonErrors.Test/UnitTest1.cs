@@ -31,13 +31,13 @@ namespace CommonErrors.Test
         {
             //Arrange
             var size = 10;
-            var stack = new AnswerQueue<TrueFalseAnswer>(size);
-            stack.Enqueue(new TrueFalseAnswer(false));
+            var queue = new AnswerQueue<TrueFalseAnswer>(size);
+            queue.Enqueue(new TrueFalseAnswer(false));
             for (var i =0; i< 10; i++)
-                stack.Enqueue(new TrueFalseAnswer(true));
+                queue.Enqueue(new TrueFalseAnswer(true));
             
             //Act
-            var grade = stack.Grade;
+            var grade = queue.Grade;
             
             //Assert
             Assert.AreEqual(100, grade);

@@ -10,21 +10,20 @@ namespace CommonErrorsKata
 {
     public partial class CommonErrorsForm : Form
     {
-        private readonly AnswerQueue<TrueFalseAnswer> answerQueue;
-        private readonly string[] files;
-        private readonly SynchronizationContext synchronizationContext;
-        private int i = 100;
-        private string currentBaseName = null;
-        private readonly string[] possibleAnswers = null;
+        private readonly AnswerQueue<TrueFalseAnswer> _answerQueue;
+        private readonly string[] _files;
+        private readonly SynchronizationContext _synchronizationContext;
+        private int _time = 100;
+        private string _currentBaseName;
 
         public CommonErrorsForm()
         {
             InitializeComponent();
-            synchronizationContext = SynchronizationContext.Current;
-            files = System.IO.Directory.GetFiles(Environment.CurrentDirectory +  @"..\..\..\ErrorPics");
-            possibleAnswers = new string[] { "Missing File", "null instance", "divide by zero" };
+            _synchronizationContext = SynchronizationContext.Current;
+            _files = Directory.GetFiles(Environment.CurrentDirectory +  @"..\..\..\ErrorPics");
+            var possibleAnswers = new[] { "Missing File", "null instance", "divide by zero" };
             lstAnswers.DataSource = possibleAnswers;
-            answerQueue = new AnswerQueue<TrueFalseAnswer>(15);
+            _answerQueue = new AnswerQueue<TrueFalseAnswer>(15);
             Next();
             lstAnswers.Click += LstAnswers_Click;
             StartTimer();
@@ -33,9 +32,9 @@ namespace CommonErrorsKata
         {
             await Task.Run(() =>
             {
-                for (i = 100; i > 0; i--)
+                for (_time = 100; _time > 0; _time--)
                 {
-                    UpdateProgress(i);
+                    UpdateProgress(_time);
                     Thread.Sleep(50);
                 }
                 Message("Need to be quicker on your feet next time!  Try again...");
@@ -44,36 +43,36 @@ namespace CommonErrorsKata
 
         private void LstAnswers_Click(object sender, EventArgs e)
         {
-            i = 100;
-            var tokens = currentBaseName.Split(' ');
+            _time = 100;
+            var tokens = _currentBaseName.Split(' ');
             //TODO:  Figure out what is a valid answer.
-            answerQueue.Enqueue(new TrueFalseAnswer(true));
+            _answerQueue.Enqueue(new TrueFalseAnswer(true));
             Next();
         }
 
         private void Next()
         {
-            if (answerQueue.Count == 15 && answerQueue.Grade >= 98)
+            if (_answerQueue.Count == 15 && _answerQueue.Grade >= 98)
             {
                 MessageBox.Show("Congratulations you've defeated me!");
                 Application.Exit();
                 return;
             }
-            label1.Text = answerQueue.Grade.ToString() + "%";
-            var file = files.GetRandom();
-            currentBaseName= Path.GetFileName(file);
+            label1.Text = _answerQueue.Grade.ToString() + "%";
+            var file = _files.GetRandom();
+            _currentBaseName= Path.GetFileName(file);
             pbImage.ImageLocation = file;
         }
 
         public void UpdateProgress(int value)
         {
-            synchronizationContext.Post(new SendOrPostCallback(x => {
+            _synchronizationContext.Post(new SendOrPostCallback(x => {
                 progress.Value = value;
             }), value);
         }
         public void Message(string value)
         {
-            synchronizationContext.Post(new SendOrPostCallback(x => {
+            _synchronizationContext.Post(new SendOrPostCallback(x => {
                 MessageBox.Show(value);
             }), value);
         }
