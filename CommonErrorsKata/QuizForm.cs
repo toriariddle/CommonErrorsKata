@@ -17,14 +17,12 @@ namespace CommonErrorsKata
         private readonly int _maxAnswers = 15;
         private int _time = 100;
         private string _visibleImagePath;
-
         public CommonErrorsForm()
         {
             InitializeComponent();
             _synchronizationContext = SynchronizationContext.Current;
             _files = Directory.GetFiles(Environment.CurrentDirectory + @"..\..\..\ErrorPics");
             _possibleAnswers = new[] { "Missing File", "Null Instance", "Divide By Zero" };
-            // _possibleAnswers = _files.Select(f => f.Split(@"\".ToCharArray()).Last().Replace(".png", " ")).ToArray();
             _possibleAnswers = _files.Select(f => Path.GetFileName(f)?.Replace(".png", "")).ToArray();
             lstAnswers.DataSource = _possibleAnswers;
             _answerQueue = new AnswerQueue<TrueFalseAnswer>(_maxAnswers);
@@ -32,6 +30,7 @@ namespace CommonErrorsKata
             lstAnswers.Click += LstAnswers_Click;
             StartTimer();
         }
+
         private async void StartTimer()
         {
             await Task.Run(() =>
@@ -48,17 +47,13 @@ namespace CommonErrorsKata
         private void LstAnswers_Click(object sender, EventArgs e)
         {
             _time = 100;
-            //var tokens = _visibleImagePath.Split(' ');
             var selected = _possibleAnswers[lstAnswers.SelectedIndex];
-            //TODO:  Figure out what is a valid answer.
             if (selected != null && selected == _visibleImagePath)
             {
                 _answerQueue.Enqueue(new TrueFalseAnswer(true));
             }
             else
-            {
                 _answerQueue.Enqueue(new TrueFalseAnswer(false));
-            }
 
             Next();
         }
