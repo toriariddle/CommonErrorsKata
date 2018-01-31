@@ -15,15 +15,15 @@ namespace CommonErrors.Test
         public void ShouldOnlyAllowTenAnswers()
         {
             //Arrange
-            var size = 10;
-            var stack = new AnswerQueue<TrueFalseAnswer>(size);
+            var queue = new AnswerQueue<TrueFalseAnswer>(10);
 
             //Act
-            for (int i = 0; i < size+1; i++)
-                stack.Enqueue(new TrueFalseAnswer(true));
-
+            for (var i = 0; i < 10 + 1; i++)
+            {
+                queue.Enqueue(new TrueFalseAnswer(true));
+            }
             //Assert
-            Assert.IsTrue(stack.Count <= 10);
+            Assert.IsTrue(queue.Count <= 10);
         }
 
         [Test]
@@ -48,14 +48,14 @@ namespace CommonErrors.Test
         {
             //Arrange
             var size = 10;
-            var stack = new AnswerQueue<TrueFalseAnswer>(size);
-            stack.Enqueue(new TrueFalseAnswer(false));
-            stack.Enqueue(new TrueFalseAnswer(true));
-            stack.Enqueue(new TrueFalseAnswer(true));
-            stack.Enqueue(new TrueFalseAnswer(false));
+            var queue = new AnswerQueue<TrueFalseAnswer>(size);
+            queue.Enqueue(new TrueFalseAnswer(false));
+            queue.Enqueue(new TrueFalseAnswer(true));
+            queue.Enqueue(new TrueFalseAnswer(true));
+            queue.Enqueue(new TrueFalseAnswer(false));
 
             //Act
-            var grade = stack.Grade;
+            var grade = queue.Grade;
 
             //Assert
             Assert.AreEqual(50, grade);
