@@ -58,7 +58,7 @@ namespace CommonErrorsKata
                 Application.Exit();
                 return;
             }
-            label1.Text = _answerQueue.Grade.ToString() + "%";
+            label1.Text = _answerQueue.Grade + "%";
             var file = _files.GetRandom();
             _currentBaseName= Path.GetFileName(file);
             pbImage.ImageLocation = file;
@@ -66,15 +66,13 @@ namespace CommonErrorsKata
 
         public void UpdateProgress(int value)
         {
-            _synchronizationContext.Post(new SendOrPostCallback(x => {
+            _synchronizationContext.Post(x => {
                 progress.Value = value;
-            }), value);
+            }, value);
         }
         public void Message(string value)
         {
-            _synchronizationContext.Post(new SendOrPostCallback(x => {
-                MessageBox.Show(value);
-            }), value);
+            if (value != null) _synchronizationContext.Post(x => { MessageBox.Show(value); }, value);
         }
 
         private void btnCancel_Click(object sender, EventArgs e)
