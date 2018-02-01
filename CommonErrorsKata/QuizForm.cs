@@ -17,6 +17,7 @@ namespace CommonErrorsKata
         private readonly int _maxAnswers = 15;
         private int _time = 100;
         private string _visibleImagePath;
+
         public CommonErrorsForm()
         {
             InitializeComponent();
